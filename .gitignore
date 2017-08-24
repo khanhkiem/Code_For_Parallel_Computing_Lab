@@ -1,1 +1,13 @@
+# Ignore everything
 *
+
+# Apply recursively
+!*/
+
+# Except:
+!*.c
+!*.cpp
+!*.h
+!*.py
+!Makefile
+!*README.md
