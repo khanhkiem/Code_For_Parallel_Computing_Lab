@@ -7,9 +7,9 @@ default: clean begin main end
 begin:
 	@echo "Building Exercise for Lab1&2-Introduction and Multithread"
 
-main: $(SRC).c
-	$(CC) $(CFLAG) $(SRC).c -o $(OUTPUT)
-	
+main: $(SRC).cpp
+	$(CC) $(CFLAG) $(SRC).cpp -o $(OUTPUT)
+
 clean:
 	rm -f $(SRC).o $(OUTPUT)
 
