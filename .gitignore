@@ -11,3 +11,4 @@
 !*.py
 !Makefile
 !*README.md
+!*.json
