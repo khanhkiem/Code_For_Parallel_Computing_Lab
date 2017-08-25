@@ -1,0 +1,6 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "code-runner.executorMap": {
+    "cpp": "make && cd $dir && ./mul_mat_pthread_output 100 2 0"
+  }
+}
