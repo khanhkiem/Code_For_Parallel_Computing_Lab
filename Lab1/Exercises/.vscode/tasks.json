@@ -5,7 +5,6 @@
   "tasks": [
     {
       "taskName": "build",
-      "type": "process",
       "command": "make",
       "args": [],
       "group": "build",
