@@ -92,9 +92,9 @@ int main(int argc, const char *argv[])
 
         /* Initialize pthread and attributes */
         printf("3. Initialize pthreads...\n");
-        pthread_t *thread;
+        pthread_t *threads;
         pthread_attr_t attr;
-        thread = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
+        threads = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
         pthread_attr_init(&attr);
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
@@ -110,11 +110,27 @@ int main(int argc, const char *argv[])
         printf("5. Calculating...\n");
         //////////////////////////////////////////////////////////
         // TODO: comment out these lines below and write your code
-        int rows = dim;
-        mul_mat(0, &rows, dim, matrix_a, matrix_b, result);
+        // int rows = dim;
+        // mul_mat(0, &rows, dim, matrix_a, matrix_b, result);
 
+        for (int threadIdx = 0; threadIdx < num_threads; threadIdx++)
+        {
+            param_t threadParam;
+            threadParam.dim = dim;
+            threadParam.m_a = matrix_a;
+            threadParam.m_b = matrix_b;
+            threadParam.m_r = result;
+            threadParam.id = threadIdx;
+            threadParam.rows = &num_rows_per_thread[threadIdx];
+            pthread_create(&threads[threadIdx], &attr, worker, (void *)&threadParam);
+        }
         //////////////////////////////////////////////////////////
+        pthread_attr_destroy(&attr);
 
+        for (int threaedIdx = 0; threaedIdx < num_threads; threaedIdx++)
+        {
+            pthread_join(threads[threaedIdx], NULL);
+        }
         /* Print matrices */
         if (print_flag == 1)
         {
@@ -126,13 +142,14 @@ int main(int argc, const char *argv[])
             print_matrix(result, dim);
         }
         printf("6. Completed the main program. Exitting now.\n");
+        pthread_exit(NULL);
         return 1;
     }
     else
     {
-        printf("Usage: ./mat_mul_pthread DIM NUM_THREADS [PRINT_FLAG]\n");
-        printf("\t ./mat_mul_pthread 10 2 1\n");
-        printf("\t ./mat_mul_pthread is run with matrix 10x10, 2 threads, print_flag = 1\n");
+        printf("Usage: ./mul_mat_pthread_output DIM NUM_THREADS [PRINT_FLAG]\n");
+        printf("\t /mul_mat_pthread_output 10 2 1\n");
+        printf("\t ./mul_mat_pthread_output is run with matrix 10x10, 2 threads, print_flag = 1\n");
         return 0;
     }
 }
@@ -140,7 +157,7 @@ int main(int argc, const char *argv[])
 void *worker(void *arg)
 {
     param_t *p = (param_t *)arg;
-    //printf("Thread %d: id = %d - num of handled rows = %d\n", p->id, p->id, *p->rows);
+    // printf("Thread %d: id = %d - num of handled rows = %d\n", p->id, p->id, *p->rows);
     mul_mat(p->id, p->rows, p->dim, p->m_a, p->m_b, p->m_r);
     pthread_exit(0);
 }
@@ -155,7 +172,32 @@ void mul_mat(int id, int *rows, int dim, double **matrix_a, double **matrix_b, d
     // TODO
     // Comment out these line below and write your code with a parallel version
 
-    for (row = 0; row < dim; row++)
+    // time complexity = O(n^3)
+    // space complexity = 2 * n^2 * 8 / 2^20
+    // 2 matrix
+    // dim = n
+    // double consist 8 byte
+    // 1MB = 2^20 byte
+    // Ex dim = 20000 -> 6000MB (greater than my 4096 MB RAM)
+    // Ex dim = 10000 -> 1500MB
+    // Ex dim = 1000 -> 15 MB
+    // Ex dim = 100 -> 0.15 MB
+    // for (row = 0; row < dim; row++)
+    // {
+    //     for (col = 0; col < dim; col++)
+    //     {
+    //         sum = 0.0;
+    //         for (k = 0; k < dim; k++)
+    //         {
+    //             sum = sum + (matrix_a[row][k] * matrix_b[k][col]);
+    //         }
+    //         result[row][col] = sum;
+    //     }
+    // }
+    const int start_row = (*rows) * id;
+    const int end_row = (*rows) * (id + 1);
+
+    for (row = start_row; row < end_row; row++)
     {
         for (col = 0; col < dim; col++)
         {
@@ -167,6 +209,8 @@ void mul_mat(int id, int *rows, int dim, double **matrix_a, double **matrix_b, d
             result[row][col] = sum;
         }
     }
+
+    pthread_exit(NULL);
     //////////////////////////////////////////////////////////
 }
 

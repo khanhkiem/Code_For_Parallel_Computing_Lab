@@ -1,25 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# results from serial version of matrix multiplication with size of matrices: 10, 100, 1000, 10000, 20000, 30000, 40000, 50000, ...
+SERIAL_VERSION = [0.002, 0.006, 6.634, 13312.102]
 
 # results from serial version of matrix multiplication with size of matrices: 10, 100, 1000, 10000, 20000, 30000, 40000, 50000, ...
-serial_version = [0.004, 0.055, 10.185, 720.354, 1284.211]
+PARALLEL_VERSION = [0.002, 0.002, 0.521, 967.12]
 
-# results from serial version of matrix multiplication with size of matrices: 10, 100, 1000, 10000, 20000, 30000, 40000, 50000, ...
-pthread_version = [0.004, 0.040, 5.0,300,500]
+MATRIX_SIZES = ('10 - 2', '100 - 10', '1000 - 50', '10000 - 50')
+X_POS = np.arange(len(SERIAL_VERSION))
 
-matrix_sizes = ('10', '100', '1000', '10000', '20000')
-x_pos = np.arange(len(serial_version))
+plt.plot(SERIAL_VERSION, label='Serial Version')
+plt.plot(PARALLEL_VERSION, label='Parallel Version')
 
-plt.plot(serial_version, label = 'Serial Version')
-plt.plot(pthread_version, label = 'Pthread Version')
-
-plt.xlabel('Matrix sizes (N)')
-plt.xticks(x_pos, matrix_sizes)
+plt.xlabel('Matrix sizes - Number of parallel threads')
+plt.xticks(X_POS, MATRIX_SIZES)
 plt.ylabel('Execution time (s)')
-plt.title('Matrix Multiplication in Parallel Computing')
+plt.title('Matrix Multiplication Serial vs Parallel')
 plt.grid(True)
 plt.legend()
-
+plt.savefig('performance.png')
 plt.show()
-
