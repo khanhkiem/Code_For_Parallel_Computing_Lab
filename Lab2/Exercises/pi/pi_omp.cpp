@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     std::cout << "counts:" << Count << std::endl;
     std::cout << "preparation starting" << std::endl;
-    if (Error = prepare(Count) != 0)
+    if ((Error = prepare(Count)) != 0)
         return Error;
     std::cout << "preparation done" << std::endl;
     unsigned long long start_ticks = my_getticks();
