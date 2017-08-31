@@ -1,6 +1,13 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-  "code-runner.customCommand": "make && ./pi_omp_gnu 1000 8",
+  // 1000000
+  // 10000000
+  // 100000000
+  // 200000000
+  // 300000000
+  // 400000000
+  // 500000000
+  "code-runner.customCommand": "make && ./pi_omp_gnu 1000000 8",
   "files.associations": {
     "array": "cpp",
     "*.tcc": "cpp",
