@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-if __name__ == "__main__":
+
+def main():
     plt.figure(figsize=(12, 7))
 
     # results from serial version of pi calculation
@@ -40,3 +41,7 @@ if __name__ == "__main__":
     plt.legend()
 
     plt.show()
+
+
+if __name__ == "__main__":
+    main()
