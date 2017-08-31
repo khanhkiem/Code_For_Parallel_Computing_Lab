@@ -1,7 +1,8 @@
 #include "sgemm.h"
-
+#include "omp.h"
 #define SIZE 100l
 float *A, *B, *C; /* Matrices */
+int num_threads;
 
 float compute(long int Count)
 {
@@ -86,17 +87,16 @@ int main(int argc, char *argv[])
     long int Count = SIZE;
     int Error;
 
-    if (argc > 1)
+    if (argc < 3)
     {
-        Count = std::atoi(argv[1]);
-        if (Count <= 0)
-        {
-            std::cerr << "Invalid argument" << std::endl;
-            std::cerr << "Usage: " << argv[0] << "N" << std::endl;
-            std::cerr << "       N = size" << std::endl;
-            return 1;
-        }
+        std::cerr << "Invalid argument" << std::endl;
+        std::cerr << "Usage: " << argv[0] << "N T" << std::endl;
+        std::cerr << "       N = size" << std::endl;
+        std::cerr << "       T = Num thread" << std::endl;
+        return 1;
     }
+    Count = std::atoi(argv[1]);
+    num_threads = std::atoi(argv[2]);
 
     std::cout << "counts:" << Count << std::endl;
     std::cout << "preparation starting" << std::endl;
