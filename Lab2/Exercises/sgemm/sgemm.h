@@ -10,16 +10,15 @@
 #include <stdint.h>
 #include <math.h>
 
-static inline unsigned long long
-my_getticks ()
+static inline unsigned long long my_getticks()
 {
   struct timeval t;
-  gettimeofday (&t, 0);
+  gettimeofday(&t, 0);
   return t.tv_sec * 1000000ULL + t.tv_usec;
 }
 
 static inline double
-my_ticks_to_seconds (unsigned long long ticks)
+my_ticks_to_seconds(unsigned long long ticks)
 {
   return ticks * 1.0e-6;
 }
