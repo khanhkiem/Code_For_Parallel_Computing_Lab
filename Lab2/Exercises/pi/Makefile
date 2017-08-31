@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAG = -fopenmp  # for debugging
+CXXFLAG = -fopenmp -g  # for debugging
 OUTPUT = pi_omp_gnu
 SRC = pi_omp
 default: clean begin main end
