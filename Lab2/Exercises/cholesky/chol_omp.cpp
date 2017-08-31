@@ -1,9 +1,9 @@
 #include "chol.h"
 
 #define SIZE 100l
-#define DEBUGSIZE 11            /* maximum size to print matrix and validate result */
+#define DEBUGSIZE 11 /* maximum size to print matrix and validate result */
 float *A;
-float *ASAVE;                   /* Matrix */
+float *ASAVE; /* Matrix */
 
 float compute(long int Count)
 {
@@ -18,14 +18,12 @@ float compute(long int Count)
 int prepare(long int Count)
 {
     int i, j, n = Count;
-    int Rcond;                  /* Condition number of A */
+    int Rcond; /* Condition number of A */
 
     int Matrix_elements = Count * Count;
     int Matrix_bytes = sizeof(float) * Matrix_elements;
 
-    std::cout << "allocating 2 times " << Matrix_bytes / (1.0 * 1024 *
-                                                          1024) << " MB" <<
-        std::endl;
+    std::cout << "allocating 2 times " << Matrix_bytes / (1.0 * 1024 * 1024) << " MB" << std::endl;
 
     /* Allocate the matrices */
     A = (float *)malloc(Matrix_bytes);
@@ -107,7 +105,8 @@ int cleanup(long int N)
             }
         }
         std::
-            cout << "Max % deviation from original matrix " << Max << std::endl;
+                cout
+            << "Max % deviation from original matrix " << Max << std::endl;
     }
 
     /* Free the matrices */
