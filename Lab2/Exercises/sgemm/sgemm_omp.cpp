@@ -1,7 +1,7 @@
 #include "sgemm.h"
 
 #define SIZE 100l
-float *A, *B, *C;               /* Matrices */
+float *A, *B, *C; /* Matrices */
 
 float compute(long int Count)
 {
@@ -20,9 +20,7 @@ int prepare(long int Count)
     int Matrix_elements = Count * Count;
     int Matrix_bytes = sizeof(float) * Matrix_elements;
 
-    std::cout << "allocating 3 times " << Matrix_bytes / (1.0 * 1024 *
-                                                          1024) << "MB" <<
-        std::endl;
+    std::cout << "allocating 3 times " << Matrix_bytes / (1.0 * 1024 * 1024) << "MB" << std::endl;
 
     /* Allocate the matrices */
     A = (float *)malloc(Matrix_bytes);
@@ -35,7 +33,7 @@ int prepare(long int Count)
     B = (float *)malloc(Matrix_bytes);
     if (B == NULL)
     {
-        std::cout << "Could not allocate matrix A" << Count << std::endl;
+        std::cout << "Could not allocate matrix B" << Count << std::endl;
         return -1;
     }
 
@@ -71,8 +69,8 @@ int cleanup(long int N)
             {
                 std::cout << "  " << i << " " << j << " : " << C[j +
                                                                  i *
-                                                                 N] <<
-                    std::endl;
+                                                                     N]
+                          << std::endl;
             }
     }
 
@@ -102,7 +100,7 @@ int main(int argc, char *argv[])
 
     std::cout << "counts:" << Count << std::endl;
     std::cout << "preparation starting" << std::endl;
-    if (Error = prepare(Count) != 0)
+    if ((Error = prepare(Count)) != 0)
         return Error;
     std::cout << "preparation done" << std::endl;
     unsigned long long start_ticks = my_getticks();
