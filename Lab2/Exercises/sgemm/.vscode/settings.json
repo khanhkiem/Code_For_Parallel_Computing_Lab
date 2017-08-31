@@ -1,4 +1,5 @@
 {
+  "code-runner.customCommand": "make && ./sgemm_omp_gnu",
   "files.associations": {
     "algorithm": "cpp",
     "functional": "cpp"
