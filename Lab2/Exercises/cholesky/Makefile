@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAG = -fopenmp  # for debugging
+CXXFLAG = -fopenmp -g # for debugging
 OUTPUT = chol_omp_gnu
 SRC = chol_omp
 default: begin main end

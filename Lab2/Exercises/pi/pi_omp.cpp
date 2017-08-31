@@ -4,7 +4,6 @@
 
 #define SIZE 100l
 
-double *rect, *midPt, *area;
 int num_threads = 8;
 
 /* TODO */
@@ -15,67 +14,28 @@ int compute(long int num_steps)
 
     double width = 2. / num_steps;
     pi = 0.;
+
+    omp_set_num_threads(num_threads);
+#pragma omp parallel for shared(width) reduction(+ : pi)
     for (int i = 0; i < num_steps; ++i)
     {
-        rect[i] = (double)i;
-        midPt[i] = (i + 0.5) * width - 1.0;
+        double midPt = (i + 0.5) * width - 1.0;
+        pi += sqrt(1.0 - midPt * midPt) * width * 2.0;
     }
 
-    for (int i = 0; i < num_steps; ++i)
-    {
-        area[i] = sqrt(1.0 - midPt[i] * midPt[i]) * width;
-    }
-
-    for (int i = 0; i < num_steps; ++i)
-    {
-        pi += area[i] * 2.0;
-    }
     std::cout << "PI:" << pi << std::endl;
-
-    return (0);
-}
-
-int parallelCompute(long int num_steps)
-{
-    double pi;
-
-    double width = 2. / num_steps;
-    pi = 0.;
-    for (int i = 0; i < num_steps; ++i)
-    {
-        rect[i] = (double)i;
-        midPt[i] = (i + 0.5) * width - 1.0;
-    }
-
-    for (int i = 0; i < num_steps; ++i)
-    {
-        area[i] = sqrt(1.0 - midPt[i] * midPt[i]) * width;
-    }
-
-    for (int i = 0; i < num_steps; ++i)
-    {
-        pi += area[i] * 2.0;
-    }
-    std::cout << "PI:" << pi << std::endl;
-
     return (0);
 }
 
 int prepare(long int Count)
 {
     int i, j, n = Count;
-    rect = new double[Count];
-    midPt = new double[Count];
-    area = new double[Count];
 
     return (0);
 }
 
 int cleanup(long int N)
 {
-    delete rect;
-    delete midPt;
-    delete area;
     return (0);
 }
 
@@ -105,7 +65,7 @@ int main(int argc, char *argv[])
         return Error;
     std::cout << "preparation done" << std::endl;
     unsigned long long start_ticks = my_getticks();
-    Error = parallelCompute(Count);
+    Error = compute(Count);
 
     unsigned long long end_ticks = my_getticks();
     unsigned long long ticks = end_ticks - start_ticks;
