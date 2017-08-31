@@ -10,7 +10,20 @@ float compute(long int Count)
 
     /* TODO */
     /* Modify this function to implement a parallel version with openmp */
-
+    omp_set_num_threads(num_threads);
+#pragma omp parallel
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            double dot = 0;
+            for (int k = 0; k < N; k++)
+            {
+                dot += A[i * N + k] * B[k * N + j];
+            }
+            C[i * N + j] = dot;
+        }
+    }
     return (0.);
 }
 
