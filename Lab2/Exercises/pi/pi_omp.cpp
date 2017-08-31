@@ -1,4 +1,5 @@
 #include "pi.h"
+#include "stdio.h"
 
 #define SIZE 100l
 double *rect, *midPt, *area;
@@ -13,19 +14,19 @@ int compute(long int num_steps)
     pi = 0.;
     for (int i = 0; i < num_steps; ++i)
     {
-            rect[i] = (double)i;
-            midPt[i] = (i + 0.5) * width - 1.0;
-        }
+        rect[i] = (double)i;
+        midPt[i] = (i + 0.5) * width - 1.0;
+    }
 
     for (int i = 0; i < num_steps; ++i)
     {
-            area[i] = sqrt(1.0 - midPt[i] * midPt[i]) * width;
-        }
+        area[i] = sqrt(1.0 - midPt[i] * midPt[i]) * width;
+    }
 
     for (int i = 0; i < num_steps; ++i)
     {
-            pi += area[i] * 2.0;
-        }
+        pi += area[i] * 2.0;
+    }
     std::cout << "PI:" << pi << std::endl;
 
     return (0);
@@ -56,15 +57,15 @@ int main(int argc, char *argv[])
 
     if (argc > 1)
     {
-            Count = std::atoi(argv[1]);
-            if (Count <= 0)
-            {
-                        std::cerr << "Invalid argument" << std::endl;
-                        std::cerr << "Usage: " << argv[0] << "N" << std::endl;
-                        std::cerr << "       N = size" << std::endl;
-                        return 1;
-                    }
+        Count = std::atoi(argv[1]);
+        if (Count <= 0)
+        {
+            std::cerr << "Invalid argument" << std::endl;
+            std::cerr << "Usage: " << argv[0] << "N" << std::endl;
+            std::cerr << "       N = size" << std::endl;
+            return 1;
         }
+    }
 
     std::cout << "counts:" << Count << std::endl;
     std::cout << "preparation starting" << std::endl;

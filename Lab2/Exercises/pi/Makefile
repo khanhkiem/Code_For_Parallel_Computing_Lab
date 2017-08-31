@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAG = -fopenmp  # for debugging
 OUTPUT = pi_omp_gnu
 SRC = pi_omp
-default: begin main end
+default: clean begin main end
 
 begin:
 	@echo "Building Exercise for Lab1&2-Introduction and Multithread [OpenMP    ]"
