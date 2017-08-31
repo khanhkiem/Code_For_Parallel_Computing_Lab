@@ -1,12 +1,41 @@
 #include "pi.h"
 #include "stdio.h"
+#include "omp.h"
 
 #define SIZE 100l
+
 double *rect, *midPt, *area;
+int num_threads = 8;
 
 /* TODO */
 /* Modify this function to implement a parallel version with openmp */
 int compute(long int num_steps)
+{
+    double pi;
+
+    double width = 2. / num_steps;
+    pi = 0.;
+    for (int i = 0; i < num_steps; ++i)
+    {
+        rect[i] = (double)i;
+        midPt[i] = (i + 0.5) * width - 1.0;
+    }
+
+    for (int i = 0; i < num_steps; ++i)
+    {
+        area[i] = sqrt(1.0 - midPt[i] * midPt[i]) * width;
+    }
+
+    for (int i = 0; i < num_steps; ++i)
+    {
+        pi += area[i] * 2.0;
+    }
+    std::cout << "PI:" << pi << std::endl;
+
+    return (0);
+}
+
+int parallelCompute(long int num_steps)
 {
     double pi;
 
@@ -55,17 +84,20 @@ int main(int argc, char *argv[])
     long int Count = SIZE;
     int Error;
 
-    if (argc > 1)
+    if (argc < 3)
     {
-        Count = std::atoi(argv[1]);
-        if (Count <= 0)
-        {
-            std::cerr << "Invalid argument" << std::endl;
-            std::cerr << "Usage: " << argv[0] << "N" << std::endl;
-            std::cerr << "       N = size" << std::endl;
-            return 1;
-        }
+        std::cerr << "Invalid argument" << std::endl;
+        std::cerr << "Usage: " << argv[0] << "N T" << std::endl;
+        std::cerr << "       N = size" << std::endl;
+        std::cerr << "       T = num threads" << std::endl;
+        return 1;
     }
+
+    Count = std::atol(argv[1]);
+    num_threads = std::atoi(argv[2]);
+
+    printf("Count: %ld\n", Count);
+    printf("Num threads: %d\n", num_threads);
 
     std::cout << "counts:" << Count << std::endl;
     std::cout << "preparation starting" << std::endl;
@@ -73,7 +105,7 @@ int main(int argc, char *argv[])
         return Error;
     std::cout << "preparation done" << std::endl;
     unsigned long long start_ticks = my_getticks();
-    Error = compute(Count);
+    Error = parallelCompute(Count);
 
     unsigned long long end_ticks = my_getticks();
     unsigned long long ticks = end_ticks - start_ticks;
