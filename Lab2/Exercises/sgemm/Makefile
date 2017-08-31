@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAG = -fopenmp  # for debugging
+CXXFLAG = -fopenmp -g # for debugging
 OUTPUT = sgemm_omp_gnu
 SRC = sgemm_omp
 default: begin main end
