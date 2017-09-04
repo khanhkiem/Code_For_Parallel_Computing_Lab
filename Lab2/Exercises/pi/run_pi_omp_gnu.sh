@@ -14,6 +14,7 @@ latest_output_file=$output_dir`ls -t $output_dir | head -1`
 # ensure that there is a file exist in output_dir
 if [ "$latest_output_file" != "$output_dir" ]
 then
+  printf "\nContinue previous work\n"
   rm $latest_output_file
 fi
 
