@@ -6,7 +6,7 @@ def main():
     plt.figure(figsize=(12, 7))
 
     # results from serial version of sgemm calculation
-    sgemm_serial = [0.011164, 14.5412,  109.243, ]
+    sgemm_serial = [0.011164, 14.5412,  109.243, 1095.86]
 
     # results from openmp on host version of sgemm calculation: 8 threads
     sgemm_omp_8threads = [0.00177, 2.2704, 18.6356, 180.404]
