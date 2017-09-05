@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -44,7 +45,7 @@ def main():
     plt.grid(True)
     plt.legend()
 
-    plt.savefig("speedup.jpeg")
+    plt.savefig(sys.path[0] + "/speedup.jpeg")
     plt.show()
 
 

@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -43,7 +44,8 @@ def main():
     plt.title('Pi Calculation in Parallel Computing by Riemann Integral method')
     plt.grid(True)
     plt.legend()
-    plt.savefig('pi.jpeg')
+
+    plt.savefig(sys.path[0] + "/speedup.jpeg")
     plt.show()
 
 
