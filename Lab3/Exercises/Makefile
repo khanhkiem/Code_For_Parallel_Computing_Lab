@@ -22,6 +22,6 @@ end:
 build: begin main end
 
 run:
-	mpirun -np 2 ./exercise_3 100000000
+	mpirun -np 4 ./exercise_3 100000000
 
 build_and_run: build run
