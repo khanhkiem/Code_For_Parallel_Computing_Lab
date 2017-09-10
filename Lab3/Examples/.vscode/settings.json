@@ -1,0 +1,6 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "code-runner.executorMap": {
+    "cpp": "rm -f $fileNameWithoutExt && cd $dir && mpicc $fileName -o $fileNameWithoutExt && mpirun -np 2 $dir$fileNameWithoutExt"
+  }
+}
