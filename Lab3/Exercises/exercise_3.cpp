@@ -1,17 +1,18 @@
+#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <mpi.h>
 #include <math.h>
 #include <time.h>
 
 int main(int argc, char *argv[])
 {
-  int i, id, np, N;
-  double x, y, double_N, end_time, start_time, spend_time;
-  int lhit;
+  int i, id, num_process, N;
+  int tag = 1;
+  double x, y, end_time, start_time, spend_time;
+
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &id);
-  MPI_Comm_size(MPI_COMM_WORLD, &np);
+  MPI_Comm_size(MPI_COMM_WORLD, &num_process);
 
   if (argc != 2)
   {
@@ -23,17 +24,16 @@ int main(int argc, char *argv[])
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
 
-  sscanf(argv[1], "%lf", &double_N);
-  N = lround(double_N);
-  MPI_Barrier(MPI_COMM_WORLD);
+  sscanf(argv[1], "%d", &N);
   start_time = MPI_Wtime();
-  lhit = 0;
 
   // To random different value at the same time
   // Each process must have different seed -> id
   // Each run must have different random value -> time(0)
   srand((unsigned)(time(0)) + id);
-  int lN = N / np;
+
+  int lN = N / num_process;
+  int process_hit = 0;
 
   for (i = 0; i < lN; i++)
   {
@@ -42,28 +42,39 @@ int main(int argc, char *argv[])
     y = ((double)rand()) / ((double)RAND_MAX);
     if ((pow(x, 2) + pow(y, 2)) <= 1)
     {
-      lhit++;
+      process_hit++;
     }
   }
-  printf("Process %d hit: %d time(s).\n", id, lhit);
+  printf("Process %d hit: %d time(s).\n", id, process_hit);
 
   int hit = 0;
 
-  // Reduce sum all lhit -> hit
-  // No need to specify root process id
-  // Then broadcast to all
-  MPI_Allreduce(&lhit, &hit, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-  double estimated_pi;
-  estimated_pi = (hit * 4) / double_N;
-  MPI_Barrier(MPI_COMM_WORLD);
-  end_time = MPI_Wtime();
-  spend_time = fabs(end_time - start_time);
-
   if (id == 0)
   {
+    int in_message;
+
+    hit = process_hit;
+    for (int source = 1; source < num_process; source++)
+    {
+      MPI_Status Stat;
+      MPI_Recv(&in_message, 1, MPI_INT, source, tag, MPI_COMM_WORLD, &Stat);
+      hit += in_message;
+    }
+
+    double estimated_pi;
+    estimated_pi = (double)hit / N * 4;
+    end_time = MPI_Wtime();
+    spend_time = fabs(end_time - start_time);
+
     printf("Number of Points Used:      %d\n", N);
-    printf("Estimate of Pi:         %24.16f\n", estimated_pi);
+    printf("Estimate of Pi:         %.15f\n", estimated_pi);
     printf("Elapsed Wall time:      %5.3e\n", spend_time);
+  }
+  else
+  {
+    const int dest = 0;
+    const int out_message = process_hit;
+    MPI_Send(&out_message, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
   }
 
   MPI_Finalize();
