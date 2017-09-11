@@ -29,12 +29,6 @@
         "/usr/include/x86_64-linux-gnu",
         "/usr/include",
         "/usr/include/mpich",
-        "/usr/src/linux-headers-4.10.0-27/include/linux",
-        "/usr/src/linux-headers-4.10.0-28/include/linux",
-        "/usr/src/linux-headers-4.10.0-30/include/linux",
-        "/usr/src/linux-headers-4.10.0-33/include/linux",
-        "/usr/src/linux-headers-4.8.0-36/include/linux",
-        "/usr/src/linux-headers-4.8.0-58/include/linux",
         "${workspaceRoot}"
       ],
       "defines": [],

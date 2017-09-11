@@ -29,18 +29,20 @@
         "/usr/include/x86_64-linux-gnu",
         "/usr/include",
         "/usr/include/mpich",
-        "/usr/src/linux-headers-4.10.0-27/include/linux",
-        "/usr/src/linux-headers-4.10.0-28/include/linux",
-        "/usr/src/linux-headers-4.10.0-30/include/linux",
-        "/usr/src/linux-headers-4.10.0-33/include/linux",
-        "/usr/src/linux-headers-4.8.0-36/include/linux",
-        "/usr/src/linux-headers-4.8.0-58/include/linux",
         "${workspaceRoot}"
       ],
       "defines": [],
       "intelliSenseMode": "clang-x64",
       "browse": {
-        "path": [],
+        "path": [
+          "/usr/include/x86_64-linux-gnu/c++/5",
+          "/usr/include/c++/5",
+          "/usr/local/include",
+          "/usr/lib/clang/3.8.0/include",
+          "/usr/include/x86_64-linux-gnu",
+          "/usr/include",
+          "${workspaceRoot}"
+        ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
       }
