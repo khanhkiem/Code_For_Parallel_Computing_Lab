@@ -2,7 +2,8 @@ CXX = mpicc
 CXXFLAG = -lm  # for debugging
 OUTPUT = main
 SRC = main
-ARG = 100000
+ARG = 128
+NP = 2
 
 default: build
 
@@ -24,9 +25,9 @@ end:
 build: begin main end
 
 run:
-	mpirun -np 4 ./$(OUTPUT) $(ARG)
+	mpirun -np $(NP) ./$(OUTPUT) $(ARG)
 
 build_and_run: build run
 
 run_2_node:
-	mpirun -np 8 -npernode 4 -hostfile ~/share/hostfile.txt ./$(OUTPUT) $(ARG)
+	mpirun -np $(NP) -npernode 2 -hostfile ~/share/hostfile.txt ./$(OUTPUT) $(ARG)
