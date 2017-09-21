@@ -18,7 +18,7 @@
 
 int main(int argc, char *argv[])
 {
-  int i, rank, num_process, N;
+  int rank, num_process, N;
   int tag = 1;
   double x, y;
 
@@ -49,13 +49,28 @@ int main(int argc, char *argv[])
     double sum_bandwidth_in_MBps = 0;
     for (int measure_count = 0; measure_count < NUM_MEASUREMENT; measure_count++)
     {
-
       if (rank == ROOT_RANK)
       {
+        for (int idx = 0; idx < packet_size_in_B; idx++)
+        {
+          transmit_buffer[idx] = (packet_size_in_B / START_SIZE) + measure_count;
+        }
+
         double start_time = MPI_Wtime();
         MPI_Send(transmit_buffer, packet_size_in_B, MPI_CHAR, dest, tag, MPI_COMM_WORLD);
         MPI_Recv(transmit_buffer, packet_size_in_B, MPI_CHAR, source, tag, MPI_COMM_WORLD, &status);
         double end_time = MPI_Wtime();
+
+        for (int idx = 0; idx < packet_size_in_B; idx++)
+        {
+          if (transmit_buffer[idx] != (packet_size_in_B / START_SIZE) + measure_count)
+          {
+            fprintf(stderr, "Received data is not ntegrity\n");
+            fflush(stderr);
+            MPI_Abort(MPI_COMM_WORLD, 1);
+          }
+        }
+
         sum_bandwidth_in_MBps += packet_size_in_B * 2 / (end_time - start_time) / (1024 * 1024);
       }
       else

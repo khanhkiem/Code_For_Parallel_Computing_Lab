@@ -28,7 +28,9 @@ build: begin main end
 run:
 	mpirun -np $(NP) ./$(OUTPUT) $(ARG)
 
-build_and_run: build run
+build_run: build run
 
 run_2_node:
 	mpirun -np $(NP) -npernode $(NPN) -hostfile ~/share/hostfile.txt ./$(OUTPUT) $(ARG)
+
+buid_run_2_node: build run_2_node
