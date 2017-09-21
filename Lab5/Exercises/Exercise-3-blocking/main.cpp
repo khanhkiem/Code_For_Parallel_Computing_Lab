@@ -4,11 +4,23 @@
 #include <math.h>
 #include <time.h>
 
+#define ROOT_RANK (0)
+
+// Size in B
+#define START_SIZE (128 * 1024)
+#define END_SIZE (1024 * 1024)
+
+// size increase by multiply INCREMENT
+#define INCREMENT (2)
+
+// number of measurement per packet size
+#define NUM_MEASUREMENT (5)
+
 int main(int argc, char *argv[])
 {
   int i, rank, num_process, N;
   int tag = 1;
-  double x, y, end_time, start_time;
+  double x, y;
 
   MPI_Status status;
 
@@ -26,32 +38,41 @@ int main(int argc, char *argv[])
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
 
-  if (argc != 2)
-  {
-    if (rank == 0)
-    {
-      fprintf(stderr, "Please! Specify packet size (in KB) argument\n");
-      fflush(stderr);
-    }
-    MPI_Abort(MPI_COMM_WORLD, 1);
-  }
-
-  int packet_size_in_byte = atoi(argv[1]) * 1024;
-  printf("%d\n", packet_size_in_byte);
   int dest = 1 - rank;
   int source = 1 - rank;
 
   // Prepare packet
-  char *out_packet = (char *)malloc(packet_size_in_byte * sizeof(char));
-  char *in_packet = (char *)malloc(packet_size_in_byte * sizeof(char));
+  char *transmit_buffer = (char *)malloc(END_SIZE * sizeof(char));
 
-  start_time = MPI_Wtime();
-  MPI_Send(out_packet, packet_size_in_byte, MPI_CHAR, dest, tag, MPI_COMM_WORLD);
-  MPI_Recv(in_packet, packet_size_in_byte, MPI_CHAR, source, tag, MPI_COMM_WORLD, &status);
-  end_time = MPI_Wtime();
-  printf("Process %d: %f\n", rank, end_time - start_time);
-  free(out_packet);
-  free(in_packet);
+  for (int packet_size_in_B = START_SIZE; packet_size_in_B <= END_SIZE; packet_size_in_B *= 2)
+  {
+    double sum_bandwidth_in_MBps = 0;
+    for (int measure_count = 0; measure_count < NUM_MEASUREMENT; measure_count++)
+    {
+
+      if (rank == ROOT_RANK)
+      {
+        double start_time = MPI_Wtime();
+        MPI_Send(transmit_buffer, packet_size_in_B, MPI_CHAR, dest, tag, MPI_COMM_WORLD);
+        MPI_Recv(transmit_buffer, packet_size_in_B, MPI_CHAR, source, tag, MPI_COMM_WORLD, &status);
+        double end_time = MPI_Wtime();
+        sum_bandwidth_in_MBps += packet_size_in_B * 2 / (end_time - start_time) / (1024 * 1024);
+      }
+      else
+      {
+        MPI_Recv(transmit_buffer, packet_size_in_B, MPI_CHAR, source, tag, MPI_COMM_WORLD, &status);
+        MPI_Send(transmit_buffer, packet_size_in_B, MPI_CHAR, dest, tag, MPI_COMM_WORLD);
+      }
+    }
+
+    if (rank == ROOT_RANK)
+    {
+      printf("Packet size: %d KB\n", packet_size_in_B / 1024);
+      printf("Average bandwidth: %f MBps\n", sum_bandwidth_in_MBps / NUM_MEASUREMENT);
+    }
+  }
+
+  free(transmit_buffer);
 
   MPI_Finalize();
 

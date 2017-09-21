@@ -1,8 +1,8 @@
 CXX = mpicc
 CXXFLAG = -lm  # for debugging
 OUTPUT = main
+# ARG = specify when call any rule
 SRC = main
-ARG = 128
 NP = 2
 NPN = 1
 
