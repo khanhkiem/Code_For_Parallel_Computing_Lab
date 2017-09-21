@@ -18,15 +18,19 @@
 
 int main(int argc, char *argv[])
 {
-  int rank, num_process, N;
+  int rank, num_process;
   int tag = 1;
-  double x, y;
 
   MPI_Status status;
 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num_process);
+
+  char my_name[MPI_MAX_PROCESSOR_NAME];
+  int my_name_length;
+  MPI_Get_processor_name(my_name, &my_name_length);
+  printf("I'm %s\n", my_name);
 
   if (num_process != 2)
   {
