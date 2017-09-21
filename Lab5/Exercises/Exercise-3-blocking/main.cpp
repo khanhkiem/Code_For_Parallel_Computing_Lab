@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
       {
         for (int idx = 0; idx < packet_size_in_B; idx++)
         {
-          transmit_buffer[idx] = (packet_size_in_B / START_SIZE) + measure_count;
+          transmit_buffer[idx] = (packet_size_in_B / START_SIZE) * 10 + measure_count;
         }
 
         double start_time = MPI_Wtime();
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
         for (int idx = 0; idx < packet_size_in_B; idx++)
         {
-          if (transmit_buffer[idx] != (packet_size_in_B / START_SIZE) + measure_count)
+          if (transmit_buffer[idx] != (packet_size_in_B / START_SIZE) * 10 + measure_count)
           {
             fprintf(stderr, "Received data is not ntegrity\n");
             fflush(stderr);
