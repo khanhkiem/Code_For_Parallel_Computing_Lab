@@ -13,4 +13,5 @@
 !*README.md
 !*.json
 !*.sh
+!*.cc
 !/workspace-template
